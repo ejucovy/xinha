@@ -1768,7 +1768,18 @@ Xinha.prototype._createToolbar1 = function (editor, toolbar, tb_objects)
         // == "formatblock" we retrieve config.formatblock (or
         // a different way to write it in JS is
         // config["formatblock"].
-        options = editor.config[txt];
+        options = {};
+        for (var i in editor.config[txt])
+        {
+          val = editor.config[txt][i];
+          if (typeof val == 'object') {
+            options[i] = val.tag;
+          }
+          else
+          {
+            options[i] = val;
+          }
+        }
         cmd = txt;
       break;
       default:
@@ -4900,10 +4911,14 @@ Xinha.prototype.updateToolbar = function(noStatus)
         var blocks = [];
         for ( var indexBlock in this.config.formatblock )
         {
-          // prevent iterating over wrong type
-          if ( typeof this.config.formatblock[indexBlock] == 'string' )
+          var blockItem = this.config.formatblock[indexBlock];
+          if (typeof blockItem == 'object')
           {
-            blocks[blocks.length] = this.config.formatblock[indexBlock];
+            blocks[blocks.length] = blockItem.detect || blockItem.tag;
+          }
+          else if (typeof blockItem == 'string')
+          {
+            blocks[blocks.length] = blockItem;
           }
         }
 
@@ -4912,7 +4927,15 @@ Xinha.prototype.updateToolbar = function(noStatus)
         {
           for ( var x = 0; x < blocks.length; x++ )
           {
-            if ( blocks[x].toLowerCase() == deepestAncestor.tagName.toLowerCase() )
+            if (typeof blocks[x] == 'function')
+            {
+              if (blocks[x](this, deepestAncestor))
+              {
+                btn.element.selectedIndex = x;
+                break;
+              }
+            }
+	    else if ( blocks[x].toLowerCase() == deepestAncestor.tagName.toLowerCase() )
             {
               btn.element.selectedIndex = x;
             }
@@ -5220,17 +5243,34 @@ Xinha.prototype._comboSelected = function(el, txt)
       this.execCommand(txt, false, value);
     break;
     case "formatblock":
-      // Mozilla inserts an empty tag (<>) if no parameter is passed  
+      // Mozilla inserts an empty tag (<>) if no parameter is passed
       if ( !value )
       {
       	this.updateToolbar();
       	break;
       }
+      var invoker = null;
+      for (var i in this.config.formatblock)
+      {
+        var val = this.config.formatblock[i];
+        if (typeof val == 'object'
+            && val.tag == value)
+        {
+          invoker = val.invoker || null;
+          break;
+        }
+      }
+
       if( !Xinha.is_gecko || value !== 'blockquote' )
       {
         value = "<" + value + ">";
       }
-      this.execCommand(txt, false, value);
+      if (invoker)
+      {
+        invoker(this);
+      } else {
+        this.execCommand(txt, false, value);
+      }
     break;
     default:
       // try to look it up in the registered dropdowns
