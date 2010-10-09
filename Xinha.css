@@ -80,6 +80,10 @@
   color: ButtonText;
 }
 
+.htmlarea .toolbar td.toolbarElement {
+  border:0;
+}
+
 .htmlarea iframe.xinha_iframe, .htmlarea textarea.xinha_textarea
 {
   border: none; /*1px solid;*/
