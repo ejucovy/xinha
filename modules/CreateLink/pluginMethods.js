@@ -4,7 +4,7 @@ CreateLink.prototype.show = function(a)
   if (!this.dialog)
   {
     this.prepareDialog();
-  } 
+  }
 	var editor = this.editor;
 	this.a = a;
 	if(!a && this.editor.selectionEmpty(this.editor.getSelection()))
@@ -12,7 +12,13 @@ CreateLink.prototype.show = function(a)
 		alert(this._lc("You need to select some text before creating a link"));
 		return false;
 	}
-
+        if(!a && this.editor.config.linkValidator) {
+	  var errorMsg = this.editor.config.linkValidator(this.editor, a, this._lc);
+	  if( errorMsg ) {
+	    alert(errorMsg);
+	    return false;
+	  }
+	}
 	var inputs =
 	{
 		f_href   : '',
@@ -80,7 +86,7 @@ CreateLink.prototype.apply = function()
 			atr.target = values.f_other_target;
 		}
 	}
-	
+
 	if(a && a.tagName.toLowerCase() == 'a')
 	{
 		if(!atr.href)

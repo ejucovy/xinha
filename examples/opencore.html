@@ -29,7 +29,10 @@ function xinha_init()
   if(!Xinha.loadPlugins(xinha_plugins, xinha_init)) return;
 
   var xinha_config = new Xinha.Config();
-
+  xinha_config.linkValidator = function(editor, a, _lc) {
+    var sel = editor.getSelectedHTML();
+    if( sel == "dolor" ) return _lc("You can't link dolor!");
+  };
   xinha_editors = Xinha.makeEditors(xinha_editors, xinha_config, xinha_plugins);
 
   Xinha.startEditors(xinha_editors);
@@ -45,7 +48,7 @@ Xinha.addOnloadHandler(xinha_init);
 <textarea id="myTextArea" name="myTextArea" rows="25" cols="80">
 &lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 Aliquam et tellus vitae justo varius placerat. Suspendisse iaculis
-velit semper dolor. 
+velit semper <span id="dolor">dolor</span>.
 <span id="donec">((Donec gravida)) tincidunt mi.</span>
 Curabitur tristique
 ante elementum turpis. Aliquam nisl. Nulla posuere neque non
@@ -65,6 +68,12 @@ var linkButton = ed.config.btnList.createlink[3];
 // we can't make a link with no selection
 linkButton();
 
+// let's select the word "dolor" now
+// our linkValidator function should prevent us
+var dolor = ed._doc.getElementById("dolor");
+ed.selectNodeContents(dolor);
+linkButton();
+
 var node = ed._doc.getElementById("donec");
 var text = node.childNodes[0];
 
@@ -79,6 +88,7 @@ sel.addRange(range);
 
 // now we can make a link
 linkButton();
+
 </pre>
 <button onclick="eval(jQuery('#test_link').text()); return false;">Test it
 </button>

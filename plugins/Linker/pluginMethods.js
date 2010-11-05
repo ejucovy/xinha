@@ -4,11 +4,19 @@ Linker.prototype._createLink = function(a)
   {
     this._dialog = new Linker.Dialog(this);
   }
-  
+
   if(!a && this.editor.selectionEmpty(this.editor.getSelection()))
-  {       
+  {
     alert(this._lc("You must select some text before making a new link."));
     return false;
+  }
+
+  if(!a && this.editor.config.linkValidator) {
+    var errorMsg = this.editor.config.linkValidator(this.editor, a, this._lc);
+    if( errorMsg ) {
+      alert(errorMsg);
+      return false;
+    }
   }
 
   var inputs =
@@ -54,7 +62,7 @@ Linker.prototype._createLink = function(a)
       //Anchor-Link
       inputs.type = 'anchor';
       inputs.anchor = anchor[1];
-      
+
     }
     else
     {
@@ -178,9 +186,9 @@ Linker.prototype._createLink = function(a)
         {
           a.setAttribute(i, atr[i]);
         }
-        
+
         // If we change a mailto link in IE for some hitherto unknown
-        // reason it sets the innerHTML of the link to be the 
+        // reason it sets the innerHTML of the link to be the
         // href of the link.  Stupid IE.
         if(Xinha.is_ie)
         {
@@ -270,7 +278,7 @@ Linker.Dialog.prototype._prepareDialog = function()
 
   // Now we have everything we need, so we can build the dialog.
   if(!linker.lConfig.dialog && Xinha.Dialog) linker.lConfig.dialog = Xinha.Dialog;
-  
+
   var dialog = this.dialog = new linker.lConfig.dialog(linker.editor, Linker.html, 'Linker',{width:600,height:400});
   var dTreeName = Xinha.uniq('dTree_');
 
@@ -299,7 +307,7 @@ Linker.Dialog.prototype._prepareDialog = function()
   }
   ddTree.style.backgroundColor = 'white';
   this.ddTree = ddTree;
-  
+
   this.dTree._linker_premade = this.dTree.toString();
 
   var options = this.dialog.getElementById('options');
@@ -354,7 +362,7 @@ Linker.Dialog.prototype._prepareDialog = function()
 };
 
 Linker.Dialog.prototype.makeNodes = function(files, parent)
-{ 
+{
   for(var i = 0; i < files.length; i++)
   {
     if(typeof files[i] == 'string')
@@ -372,13 +380,13 @@ Linker.Dialog.prototype.makeNodes = function(files, parent)
     }
     else if(typeof files[i] == 'object')
     {
-      var id = this.Dialog_nxtid++;     
+      var id = this.Dialog_nxtid++;
       if(files[i].title) var title = files[i].title;
       else if(files[i].url) var title = files[i].url.replace(/^.*\//, '');
       else var title = "no title defined";
       if(files[i].url) var link = 'javascript:document.getElementsByName(\'' + this.dialog.id.href + '\')[0].value=decodeURIComponent(\'' + encodeURIComponent(files[i].url) + '\');document.getElementsByName(\'' + this.dialog.id.type + '\')[0].click();document.getElementsByName(\'' + this.dialog.id.href + '\')[0].focus();void(0);';
       else var link = '';
-      
+
       this.dTree.add(id, parent, title, link, title);
       if(files[i].children) {
         this.makeNodes(files[i].children, id);
@@ -402,21 +410,21 @@ Linker.Dialog.prototype.show = function(inputs, ok, cancel)
   {
     this.ddTree.innerHTML = this.dTree._linker_premade;
   }
-  
+
   if(!this.linker.lConfig.canSetTarget)
   {
-    this.dialog.getElementById('target_options').style.display = 'none';    
+    this.dialog.getElementById('target_options').style.display = 'none';
   }
-  
+
   this.showOptionsForType(inputs.type);
   this.showOptionsForTarget(inputs.target);
-  
+
   var anchor = this.dialog.getElementById('anchor');
   for(var i=anchor.length;i>=0;i--) {
     anchor[i] = null;
   }
 
-  var html = this.linker.editor.getHTML();  
+  var html = this.linker.editor.getHTML();
   var anchors = new Array();
 
   var m = html.match(/<a[^>]+name="([^"]+)"/gi);
@@ -437,7 +445,7 @@ Linker.Dialog.prototype.show = function(inputs, ok, cancel)
         if(!anchors.contains(n[1])) anchors.push(n[1]);
     }
   }
-  
+
   for(i=0;i<anchors.length;i++)
   {
     var opt = new Option(anchors[i],'#'+anchors[i],false,(inputs.anchor == anchors[i]));
@@ -465,11 +473,11 @@ Linker.Dialog.prototype.show = function(inputs, ok, cancel)
   }
 
   // Disable link targets (all targets available by default)
-  var disabledTargets = this.linker.lConfig.disableTargetTypes; 
+  var disabledTargets = this.linker.lConfig.disableTargetTypes;
   if (typeof disabledTargets == 'undefined')
   {
     disabledTargets = [];
-  } 
+  }
   else if (typeof disabledTargets == 'string')
   {
     disabledTargets = [disabledTargets];
@@ -512,10 +520,10 @@ Linker.Dialog.prototype.show = function(inputs, ok, cancel)
   }
 
   // if we're not editing an existing link, hide the remove link button
-  if (inputs.href == 'http://www.example.com/' && inputs.to == 'alice@example.com') { 
+  if (inputs.href == 'http://www.example.com/' && inputs.to == 'alice@example.com') {
     this.dialog.getElementById('clear').style.display = "none";
   }
-  else { // 
+  else { //
     var clearBtn = this.dialog.getElementById('clear');
     clearBtn.style.display = "";
     if (ok)
@@ -523,13 +531,13 @@ Linker.Dialog.prototype.show = function(inputs, ok, cancel)
       clearBtn.onclick = function() { lDialog.removeLink(ok); };
     }
   }
-  
+
   // It could be forced not be able to be removed, as is the case with link-picker.js
   if(!this.linker.lConfig.canRemoveLink)
   {
     this.dialog.getElementById('clear').style.display = 'none';
   }
-  
+
   // Connect the OK and Cancel buttons
   var dialog = this.dialog;
   var lDialog = this;
@@ -609,7 +617,7 @@ Linker.Dialog.prototype.showOptionsForType = function(type)
     urlOptions.style.display = 'none';
     anchorOptions.style.display = 'none';
   }
-  else 
+  else
   {
     urlOptions.style.display = '';
     mailtoOptions.style.display = 'none';
