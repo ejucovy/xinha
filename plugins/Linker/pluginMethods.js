@@ -11,7 +11,7 @@ Linker.prototype._createLink = function(a)
     return false;
   }
 
-  if(!a && this.editor.config.linkValidator) {
+  if(this.editor.config.linkValidator) {
     var errorMsg = this.editor.config.linkValidator(this.editor, a, this._lc);
     if( errorMsg ) {
       alert(errorMsg);
