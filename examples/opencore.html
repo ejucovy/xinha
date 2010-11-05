@@ -53,7 +53,7 @@ Aliquam et tellus vitae justo varius placerat. Suspendisse iaculis
 velit semper <span id="dolor">dolor</span>.
 <span id="donec">((Donec)) gravida tincidunt mi.</span>
 Curabitur tristique
-<span id="3"> ante elementum turpis. ((Aliquam nisl. ((Nulla posuere neque non</span>
+<span id="3"> ante elementum turpis. ((Aliquam nisl. ((Nulla posuere)) neque non</span>
 tellus. Morbi vel nibh. Cum sociis natoque penatibus et magnis dis
 <span id="4">parturient montes, ((nascetur <span>ridiculus))</span> mus. Nam nec wisi. In wisi.</span>
 Curabitur pharetra bibendum lectus.&lt;/p&gt;
@@ -189,6 +189,89 @@ sel.addRange(range);
 linkButton();
 </pre>
 
+<pre style="float: right;" id="test_link_wicked6">
+var ed = Xinha.getEditor("myTextArea");
+var linkButton = ed.config.btnList.createlink[3];
+
+var node = ed._doc.getElementById("3");
+var text = node.childNodes[0];
+
+ed.selectNodeContents(node);
+var sel = ed.getSelection();
+var range = ed.createRange(sel);
+
+// let's select the text "((Aliquam nisl"
+sel.removeAllRanges();
+range.setStart(text, 24);
+range.setEnd(text, 30);
+sel.addRange(range);
+
+// now we can make a link
+linkButton();
+</pre>
+
+<pre style="float: right;" id="test_link_wicked7">
+var ed = Xinha.getEditor("myTextArea");
+var linkButton = ed.config.btnList.createlink[3];
+
+var node = ed._doc.getElementById("3");
+var text = node.childNodes[0];
+
+ed.selectNodeContents(node);
+var sel = ed.getSelection();
+var range = ed.createRange(sel);
+
+// let's select the text "((Nulla posuere"
+sel.removeAllRanges();
+range.setStart(text, 40);
+range.setEnd(text, 45);
+sel.addRange(range);
+
+// now we can make a link
+linkButton();
+</pre>
+
+<pre style="float: right;" id="test_link_wicked8">
+var ed = Xinha.getEditor("myTextArea");
+var linkButton = ed.config.btnList.createlink[3];
+
+var node = ed._doc.getElementById("4");
+var text = node.childNodes[0];
+
+ed.selectNodeContents(node);
+var sel = ed.getSelection();
+var range = ed.createRange(sel);
+
+// let's select the text "nascetur"
+sel.removeAllRanges();
+range.setStart(text, 19);
+range.setEnd(text, 24);
+sel.addRange(range);
+
+// now we can make a link
+linkButton();
+</pre>
+
+<pre style="float: right;" id="test_link_wicked9">
+var ed = Xinha.getEditor("myTextArea");
+var linkButton = ed.config.btnList.createlink[3];
+
+var node = ed._doc.getElementById("4");
+var text = node.childNodes[0];
+
+ed.selectNodeContents(node);
+var sel = ed.getSelection();
+var range = ed.createRange(sel);
+
+// let's select the text "ridiculus"
+sel.removeAllRanges();
+range.setEnd(text, 13);
+sel.addRange(range);
+
+// now we can make a link
+linkButton();
+</pre>
+
 <button onclick="eval(jQuery('#test_link_empty').text()); return false;">Test 1
 </button>
 
@@ -208,6 +291,18 @@ linkButton();
 </button>
 
 <button onclick="eval(jQuery('#test_link_wicked5').text()); return false;">Test 3
+</button>
+
+<button onclick="eval(jQuery('#test_link_wicked6').text()); return false;">Test 3
+</button>
+
+<button onclick="eval(jQuery('#test_link_wicked7').text()); return false;">Test 3
+</button>
+
+<button onclick="eval(jQuery('#test_link_wicked8').text()); return false;">Test 3
+</button>
+
+<button onclick="eval(jQuery('#test_link_wicked9').text()); return false;">Test 3
 </button>
 
 </body>
