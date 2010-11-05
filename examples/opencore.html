@@ -12,6 +12,7 @@ var _editor_lang = "en";
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script> 
 
 <script type="text/javascript" src="../XinhaCore.js"></script>
+<script type="text/javascript" src="./wicked_validator.js"></script>
 <script type="text/javascript">
 
 var xinha_plugins =
@@ -33,6 +34,7 @@ function xinha_init()
     var sel = editor.getSelectedHTML();
     if( sel == "dolor" ) return _lc("You can't link dolor!");
   };
+  xinha_config.linkValidator = checkWickedLinks;
   xinha_editors = Xinha.makeEditors(xinha_editors, xinha_config, xinha_plugins);
 
   Xinha.startEditors(xinha_editors);
@@ -49,11 +51,11 @@ Xinha.addOnloadHandler(xinha_init);
 &lt;p&gt;Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 Aliquam et tellus vitae justo varius placerat. Suspendisse iaculis
 velit semper <span id="dolor">dolor</span>.
-<span id="donec">((Donec gravida)) tincidunt mi.</span>
+<span id="donec">((Donec)) gravida tincidunt mi.</span>
 Curabitur tristique
-ante elementum turpis. Aliquam nisl. Nulla posuere neque non
+<span id="3"> ante elementum turpis. ((Aliquam nisl. ((Nulla posuere neque non</span>
 tellus. Morbi vel nibh. Cum sociis natoque penatibus et magnis dis
-parturient montes, nascetur ridiculus mus. Nam nec wisi. In wisi.
+<span id="4">parturient montes, ((nascetur <span>ridiculus))</span> mus. Nam nec wisi. In wisi.</span>
 Curabitur pharetra bibendum lectus.&lt;/p&gt;
 </textarea>
 </form>
@@ -61,18 +63,73 @@ Curabitur pharetra bibendum lectus.&lt;/p&gt;
 <h3>
   Test link button (in Chrome, at least)
 </h3>
-<pre style="float: right;" id="test_link">
+<pre style="float: right;" id="test_link_empty">
 var ed = Xinha.getEditor("myTextArea");
 var linkButton = ed.config.btnList.createlink[3];
 
+// make sure nothing is selected
+var sel = ed.getSelection();
+sel.removeAllRanges();
+
 // we can't make a link with no selection
 linkButton();
+</pre>
+
+<pre style="float: right;" id="test_link_word">
+var ed = Xinha.getEditor("myTextArea");
+var linkButton = ed.config.btnList.createlink[3];
 
 // let's select the word "dolor" now
 // our linkValidator function should prevent us
 var dolor = ed._doc.getElementById("dolor");
 ed.selectNodeContents(dolor);
 linkButton();
+</pre>
+
+<pre style="float: right;" id="test_link_wicked">
+var ed = Xinha.getEditor("myTextArea");
+var linkButton = ed.config.btnList.createlink[3];
+
+var node = ed._doc.getElementById("donec");
+var text = node.childNodes[0];
+
+ed.selectNodeContents(node);
+var sel = ed.getSelection();
+var range = ed.createRange(sel);
+
+// let's select the text "((Don"
+sel.removeAllRanges();
+range.setEnd(text, 5);
+sel.addRange(range);
+
+// now we can make a link
+linkButton();
+</pre>
+
+<pre style="float: right;" id="test_link_wicked2">
+var ed = Xinha.getEditor("myTextArea");
+var linkButton = ed.config.btnList.createlink[3];
+
+var node = ed._doc.getElementById("donec");
+var text = node.childNodes[0];
+
+ed.selectNodeContents(node);
+var sel = ed.getSelection();
+var range = ed.createRange(sel);
+
+// let's select the text "nec))"
+sel.removeAllRanges();
+range.setStart(text, 5);
+range.setEnd(text, 9);
+sel.addRange(range);
+
+// now we can make a link
+linkButton();
+</pre>
+
+<pre style="float: right;" id="test_link_wicked3">
+var ed = Xinha.getEditor("myTextArea");
+var linkButton = ed.config.btnList.createlink[3];
 
 var node = ed._doc.getElementById("donec");
 var text = node.childNodes[0];
@@ -83,14 +140,74 @@ var range = ed.createRange(sel);
 
 // let's select the word "Donec"
 sel.removeAllRanges();
-range.setEnd(text, 5);
+range.setStart(text, 2);
+range.setEnd(text, 7);
 sel.addRange(range);
 
 // now we can make a link
 linkButton();
-
 </pre>
-<button onclick="eval(jQuery('#test_link').text()); return false;">Test it
+
+<pre style="float: right;" id="test_link_wicked4">
+var ed = Xinha.getEditor("myTextArea");
+var linkButton = ed.config.btnList.createlink[3];
+
+var node = ed._doc.getElementById("donec");
+var text = node.childNodes[0];
+
+ed.selectNodeContents(node);
+var sel = ed.getSelection();
+var range = ed.createRange(sel);
+
+// let's select the text "Donec)) grav"
+sel.removeAllRanges();
+range.setStart(text, 2);
+range.setEnd(text, 13);
+sel.addRange(range);
+
+// now we can make a link
+linkButton();
+</pre>
+
+<pre style="float: right;" id="test_link_wicked5">
+var ed = Xinha.getEditor("myTextArea");
+var linkButton = ed.config.btnList.createlink[3];
+
+var node = ed._doc.getElementById("donec");
+var text = node.childNodes[0];
+
+ed.selectNodeContents(node);
+var sel = ed.getSelection();
+var range = ed.createRange(sel);
+
+// let's select the text "((Donec)) grav"
+sel.removeAllRanges();
+range.setEnd(text, 13);
+sel.addRange(range);
+
+// now we can make a link
+linkButton();
+</pre>
+
+<button onclick="eval(jQuery('#test_link_empty').text()); return false;">Test 1
+</button>
+
+<button onclick="eval(jQuery('#test_link_word').text()); return false;">Test 2
+</button>
+
+<button onclick="eval(jQuery('#test_link_wicked').text()); return false;">Test 3
+</button>
+
+<button onclick="eval(jQuery('#test_link_wicked2').text()); return false;">Test 3
+</button>
+
+<button onclick="eval(jQuery('#test_link_wicked3').text()); return false;">Test 3
+</button>
+
+<button onclick="eval(jQuery('#test_link_wicked4').text()); return false;">Test 3
+</button>
+
+<button onclick="eval(jQuery('#test_link_wicked5').text()); return false;">Test 3
 </button>
 
 </body>
