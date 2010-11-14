@@ -12,13 +12,6 @@ CreateLink.prototype.show = function(a)
 		alert(this._lc("You need to select some text before creating a link"));
 		return false;
 	}
-        if(this.editor.config.linkValidator) {
-	  var errorMsg = this.editor.config.linkValidator(this.editor, a, this._lc);
-	  if( errorMsg ) {
-	    alert(errorMsg);
-	    return false;
-	  }
-	}
 	var inputs =
 	{
 		f_href   : '',

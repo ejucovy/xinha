@@ -1205,19 +1205,6 @@ Xinha.Config = function()
   */
   this.bodyID = null;
 
- /**
-  * A Javascript function to call when the user first clicks on the "Create Link" 
-  * button. The function can prevent the "Create Link" action from occurring by
-  * returning a string error message to display to the user. For example, this
-  * can be used to prevent the creation of links inside WikiLink text, if your
-  * backend is using a mixed html+wiki syntax.
-  * 
-  * The function will be called with three arguments: (editor, anchor_or_null, Xinha.lc)
-  * 
-  *  Default: <code>null</code>
-  */
-  this.linkValidator = null;
-
   /** A container for additional icons that may be swapped within one button (like fullscreen)
    * @private
    */
