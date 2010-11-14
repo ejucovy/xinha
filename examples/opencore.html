@@ -30,11 +30,15 @@ function xinha_init()
   if(!Xinha.loadPlugins(xinha_plugins, xinha_init)) return;
 
   var xinha_config = new Xinha.Config();
-  xinha_config.linkValidator = function(editor, a, _lc) {
-    var sel = editor.getSelectedHTML();
-    if( sel == "dolor" ) return _lc("You can't link dolor!");
+  xinha_config.Events.onExecCommand = function( cmdID, UI, param ) {
+    if( cmdID != "createlink" ) return false;
+    var error = checkWickedLinks(this, param, Xinha._lc);
+    if( error ) {
+      alert(error);
+      return true;
+    }
+    return false;
   };
-  xinha_config.linkValidator = checkWickedLinks;
   xinha_editors = Xinha.makeEditors(xinha_editors, xinha_config, xinha_plugins);
 
   Xinha.startEditors(xinha_editors);
