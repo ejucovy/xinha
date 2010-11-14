@@ -65,7 +65,7 @@ Curabitur pharetra bibendum lectus.&lt;/p&gt;
 </h3>
 <pre style="float: right;" id="test_link_empty">
 var ed = Xinha.getEditor("myTextArea");
-var linkButton = ed.config.btnList.createlink[3];
+var linkButton = function() { ed.execCommand("createlink"); };
 
 // make sure nothing is selected
 var sel = ed.getSelection();
@@ -77,7 +77,7 @@ linkButton();
 
 <pre style="float: right;" id="test_link_word">
 var ed = Xinha.getEditor("myTextArea");
-var linkButton = ed.config.btnList.createlink[3];
+var linkButton = function() { ed.execCommand("createlink"); };
 
 // let's select the word "dolor" now
 // our linkValidator function should prevent us
@@ -88,7 +88,7 @@ linkButton();
 
 <pre style="float: right;" id="test_link_wicked">
 var ed = Xinha.getEditor("myTextArea");
-var linkButton = ed.config.btnList.createlink[3];
+var linkButton = function() { ed.execCommand("createlink"); };
 
 var node = ed._doc.getElementById("donec");
 var text = node.childNodes[0];
@@ -108,7 +108,7 @@ linkButton();
 
 <pre style="float: right;" id="test_link_wicked2">
 var ed = Xinha.getEditor("myTextArea");
-var linkButton = ed.config.btnList.createlink[3];
+var linkButton = function() { ed.execCommand("createlink"); };
 
 var node = ed._doc.getElementById("donec");
 var text = node.childNodes[0];
@@ -129,7 +129,7 @@ linkButton();
 
 <pre style="float: right;" id="test_link_wicked3">
 var ed = Xinha.getEditor("myTextArea");
-var linkButton = ed.config.btnList.createlink[3];
+var linkButton = function() { ed.execCommand("createlink"); };
 
 var node = ed._doc.getElementById("donec");
 var text = node.childNodes[0];
@@ -150,7 +150,7 @@ linkButton();
 
 <pre style="float: right;" id="test_link_wicked4">
 var ed = Xinha.getEditor("myTextArea");
-var linkButton = ed.config.btnList.createlink[3];
+var linkButton = function() { ed.execCommand("createlink"); };
 
 var node = ed._doc.getElementById("donec");
 var text = node.childNodes[0];
@@ -171,7 +171,7 @@ linkButton();
 
 <pre style="float: right;" id="test_link_wicked5">
 var ed = Xinha.getEditor("myTextArea");
-var linkButton = ed.config.btnList.createlink[3];
+var linkButton = function() { ed.execCommand("createlink"); };
 
 var node = ed._doc.getElementById("donec");
 var text = node.childNodes[0];
@@ -191,7 +191,7 @@ linkButton();
 
 <pre style="float: right;" id="test_link_wicked6">
 var ed = Xinha.getEditor("myTextArea");
-var linkButton = ed.config.btnList.createlink[3];
+var linkButton = function() { ed.execCommand("createlink"); };
 
 var node = ed._doc.getElementById("3");
 var text = node.childNodes[0];
@@ -212,7 +212,7 @@ linkButton();
 
 <pre style="float: right;" id="test_link_wicked7">
 var ed = Xinha.getEditor("myTextArea");
-var linkButton = ed.config.btnList.createlink[3];
+var linkButton = function() { ed.execCommand("createlink"); };
 
 var node = ed._doc.getElementById("3");
 var text = node.childNodes[0];
@@ -233,7 +233,7 @@ linkButton();
 
 <pre style="float: right;" id="test_link_wicked8">
 var ed = Xinha.getEditor("myTextArea");
-var linkButton = ed.config.btnList.createlink[3];
+var linkButton = function() { ed.execCommand("createlink"); };
 
 var node = ed._doc.getElementById("4");
 var text = node.childNodes[0];
@@ -254,7 +254,7 @@ linkButton();
 
 <pre style="float: right;" id="test_link_wicked9">
 var ed = Xinha.getEditor("myTextArea");
-var linkButton = ed.config.btnList.createlink[3];
+var linkButton = function() { ed.execCommand("createlink"); };
 
 var node = ed._doc.getElementById("4");
 var text = node.childNodes[0];
