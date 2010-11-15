@@ -17,7 +17,7 @@ var _editor_lang = "en";
 
 var xinha_plugins =
 [
-// 'Linker'
+ 'Linker'
 ];
 var xinha_editors =
 [
@@ -30,6 +30,7 @@ function xinha_init()
   if(!Xinha.loadPlugins(xinha_plugins, xinha_init)) return;
 
   var xinha_config = new Xinha.Config();
+  xinha_config.Linker.backend = _editor_url + 'linker_backend';
   xinha_config.Events.onExecCommand = function( cmdID, UI, param ) {
     if( cmdID != "createlink" ) return false;
     var error = checkWickedLinks(this, param, Xinha._lc);
